@@ -12,7 +12,9 @@ const title = document.getElementById("adTitle");
 const body = document.getElementById("adBody");
 const footer = document.getElementById("adFooter");
 
-const AD_IMAGE_PATH = "../BugmanAds/images/";
+// toggle between local and github reference
+// const AD_IMAGE_PATH = "../BugmanAds/images/";
+const AD_IMAGE_PATH = new URL("./images/", import.meta.url).href;
 
 const BUTTON_ACTIONS = {
 
