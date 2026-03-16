@@ -1,4 +1,4 @@
-// ads-data.js
+// ads-data.js version 03-16-01
 export const ADS = [
 
   {
@@ -109,6 +109,124 @@ export const ADS = [
       energy your body produces in exchange for gruel. Suffer no more! Inquire today.
       `
       }
+
+    ],
+
+    buttons: [
+
+      {
+        label: "Close",
+        action: "close",
+        className: "btn"
+      }
+
+    ]
+
+  },
+
+  {
+    id: "bugmans-picks",
+    theme: "patriot",
+    variant: "standard",
+    slotSize: "banner",
+
+    title: "Bugman's Picks",
+
+    bannerImage: "ad-bugmans-picks-banner.png",
+
+    body: [
+
+      {
+        type: "paragraph",
+        className: "netScreed",
+        html: `
+      Subscribe to Douglas Tran's "North Sea Bounty" substack for insights on all things
+      survival related in the greater archipelago, including the Bugman's patented ward grading system©,
+      sure to guide you to just the right ward for whatever freaky ass shit you are getting up to.
+      `
+      }
+
+    ],
+
+    buttons: [
+
+      {
+        label: "Close",
+        action: "close",
+        className: "btn"
+      }
+
+    ]
+
+  },
+
+  {
+    id: "visit-lothing",
+    theme: "summer",
+    variant: "standard",
+    slotSize: "banner",
+
+    title: "Lothing Welcomes You!",
+
+    bannerImage: "ad-visit_lothing-banner.png",
+
+    body: [
+
+      {
+        type: "paragraph",
+        className: "netScreed",
+        html: `
+      We, the tourism board for beautiful Lothing, jewel of the North Sea, want to welcome you.  
+      Explore local customs, trade smoked fish, chase the locals around our beautiful and historic bell tower.
+      It all awaits you in Lothing.  So please visit! and please help - they've got us locked in this stupid tower
+      `
+      }
+
+    ],
+
+    buttons: [
+
+      {
+        label: "Close",
+        action: "close",
+        className: "btn"
+      }
+
+    ]
+
+  },
+
+  {
+    id: "bugman-wards",
+    theme: "spooky",
+    variant: "standard",
+    slotSize: "banner",
+
+    title: "Hexes got you down?",
+
+    bannerImage: "ad-feeling-cursed-banner.png",
+
+    body: [
+
+      {
+        type: "paragraph",
+        className: "netScreed",
+        html: `
+      Get yourself to a <b>Bugman Ward Shop</b>.  Here at Bugman Wards, we dedicate ourselves to making sure that
+      paralytic arm doesn't stay strapped to your side for the rest of your life just because you gave some old 
+      woman the finger!  We've got plants, ointments, disgusting berries of all kinds and one is sure to cure you.  
+      See our selection of bloods for the very best in protective help.  Our prices can't be beat anywhere
+      in the North Sea.  
+      `
+      },
+
+      {
+        type: "paragraph",
+        className: "netScreed",
+        html: `
+      Accept nothing but the best.  For adventurers travelling the fjords...it's <i>Bugman Wards!</i>
+      `
+      },
 
     ],
 

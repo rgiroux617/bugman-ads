@@ -1,4 +1,4 @@
-// ad retrieval code app.js — baseline v2026-02-19-01
+// ad retrieval code app.js — baseline v2026-03-16-01
 // 1. replace ad slot with the banner images
 // 2. 
 
@@ -15,6 +15,9 @@ const footer = document.getElementById("adFooter");
 // toggle between local and github reference
 // const AD_IMAGE_PATH = "../BugmanAds/images/";
 const AD_IMAGE_PATH = new URL("./images/", import.meta.url).href;
+
+const AD_ANIMATION = "flip";
+// options: "none" | "flip"
 
 const BUTTON_ACTIONS = {
 
@@ -73,7 +76,7 @@ function renderBlock(block, container) {
 }
 
 // loop through all predefined ad slots (class="ad-slot", so uses ".)
-window.addEventListener("DOMContentLoaded", () => {
+function initAdSlots() {
 
   document.querySelectorAll(".ad-slot").forEach(slot => {
 
@@ -87,84 +90,129 @@ window.addEventListener("DOMContentLoaded", () => {
            class="ad-banner"
            data-ad="${ad.id}">
     `;
-
   });
 
-});
+}
+
+window.addEventListener("DOMContentLoaded", initAdSlots);
+
+export function refreshAds() {
+  initAdSlots();
+}
 
 // add a clicker to the banner via the id-name
 // find JSON entry based on "data-ad" in main HTML
 // populate with elements from JSON 
-document.querySelectorAll("[data-ad]").forEach(banner => {
-  banner.addEventListener("click", () => {
-// we perform a search based on the banner to allow for this search to be independent 
-// and therefore work with multiple ads
-    const ad = ADS.find(a => a.id === banner.dataset.ad);
-    if (!ad) return;
+document.addEventListener("click", (e) => {
 
-    title.textContent = ad.title;
+  const banner = e.target.closest(".ad-banner");
+  if (!banner) return;
 
-    if (ad.kicker) {
-      kicker.textContent = ad.kicker;
-      kicker.style.display = "block";
-    } else {
-      kicker.style.display = "none";
-    }
+  const ad = ADS.find(a => a.id === banner.dataset.ad);
+  if (!ad) return;
 
-    /* clear any previous ad content */
-    body.innerHTML = "";
+  title.textContent = ad.title;
 
-    /* render each block from JSON */
-    ad.body.forEach(block => {
-      renderBlock(block, body);
+  if (ad.kicker) {
+    kicker.textContent = ad.kicker;
+    kicker.style.display = "block";
+  } else {
+    kicker.style.display = "none";
+  }
+
+  body.innerHTML = "";
+
+  ad.body.forEach(block => {
+    renderBlock(block, body);
+  });
+
+  card.className = "ad-card";
+
+  if (ad.theme) card.classList.add("ad-theme-" + ad.theme);
+  if (ad.variant) card.classList.add("ad-variant-" + ad.variant);
+
+  footer.innerHTML = "";
+
+  ad.buttons.forEach(btn => {
+
+    const button = document.createElement("button");
+    button.textContent = btn.label;
+
+    if (btn.className) button.className = btn.className;
+
+    button.addEventListener("click", () => {
+
+      const action = BUTTON_ACTIONS[btn.action];
+      if (action) action();
+
     });
 
-    /* reset card class */
-    card.className = "ad-card";
+    footer.appendChild(button);
 
-    /* apply theme */
-    if (ad.theme) {
-      card.classList.add("ad-theme-" + ad.theme);
-    }
+  });
 
-    /* apply variant */
-    if (ad.variant) {
-      card.classList.add("ad-variant-" + ad.variant);
-    }
+  // FLIP animation
+  if (AD_ANIMATION === "flip") {
 
-    /* clear old buttons */
-    footer.innerHTML = "";
+    // reset previous animation state
+    card.style.transition = "";
+    card.style.transform = "";
 
-    ad.buttons.forEach(btn => {
-      if (!ad.buttons) return;
+    card.classList.add("animating");
 
-      const button = document.createElement("button");
+    const first = banner.getBoundingClientRect();
 
-      button.textContent = btn.label;
+    modal.classList.remove("hidden");
+    modal.classList.add("active");
 
-      if (btn.className) {
-        button.className = btn.className;
-      }
+    // hide card temporarily so we can measure
+    card.style.visibility = "hidden";
 
-      button.addEventListener("click", () => {
+    requestAnimationFrame(() => {
 
-        const action = BUTTON_ACTIONS[btn.action];
+      const last = card.getBoundingClientRect();
 
-        if (action) {
-          action();
-        }
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+      const sx = first.width / last.width;
+      const sy = first.height / last.height;
+
+      card.style.transformOrigin = "top left";
+      card.style.transform = `
+        translate(${dx}px, ${dy}px)
+        scale(${sx}, ${sy})
+        rotate(-0.6deg)
+      `;
+
+      card.style.visibility = "visible";
+
+      requestAnimationFrame(() => {
+
+        card.style.transition =
+          "transform 620ms cubic-bezier(.18,.9,.32,1.1)";
+        
+        // card.style.boxShadow = "0 10px 40px rgba(0,0,0,.4)";
+
+        card.style.transform = "none";
 
       });
 
-      footer.appendChild(button);
-
     });
 
+  } else {
+
     modal.classList.remove("hidden");
-  });
+    modal.classList.add("active");
+
+  }
 
 });
 
 document.getElementById("closeAdBtn")?.addEventListener("click", () => {
+  card.style.transition = "";
+  card.style.transform = "";
   modal.classList.add("hidden");
+  modal.classList.remove("active");
 });
+
+window.refreshAds = refreshAds;
