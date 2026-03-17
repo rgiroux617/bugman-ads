@@ -26,8 +26,19 @@ const BUTTON_ACTIONS = {
   },
 
   premium() {
-    console.log("premium upgrade clicked");
     modal.classList.add("hidden");
+    modal.classList.remove("active");
+
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("bugman:premiumAccepted"));
+      console.log("event dispatched (delayed)");
+    }, 0);
+
+    // window.dispatchEvent(
+    //   new CustomEvent("bugman:premiumAccepted", {
+    //     detail: { source: "ad-engine" }
+    //   })
+    // );
   }
 
 };
